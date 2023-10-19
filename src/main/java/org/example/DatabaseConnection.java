@@ -8,32 +8,46 @@ import java.util.function.Function;
 import static java.sql.DriverManager.getConnection;
 
 public class DatabaseConnection {
-    String url = "jdbc:postgresql://localhost:5432/nazwa_bazy";
-    String username = "twój_login";
-    String password = "twoje_hasło";
-    Connection connection = null;
+    private static DatabaseConnection instance = null;
+    private Connection connection = null;
 
-    public DatabaseConnection() {
+    private DatabaseConnection() {
+        String url = "jdbc:postgresql://localhost:5432/nazwa_bazy";
+        String username = "twój_login";
+        String password = "twoje_hasło";
+
         try {
-            connection = getConnection(url,username,password);
+            connection = getConnection(url, username, password);
         } catch (SQLException e) {
             e.printStackTrace(); // Obsługa błędów
         }
     }
 
-    public ResultSet sendQuery(String query) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);//nie wiem czy to ma sens czy nie lepiej to implementować w każdym dao osobno
-            return preparedStatement.executeQuery();
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
 
-          } catch (SQLException e) {
+    public ResultSet sendQuery(PreparedStatement statement) {
+        try {
+            return statement.executeQuery();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public void sendUpdate(String query){
+    public PreparedStatement prepareStatement(String query){
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.executeUpdate();
+            return connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendUpdate(PreparedStatement statement) {
+        try {
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
