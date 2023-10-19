@@ -12,7 +12,7 @@ public class CategoryDAOimpl implements CategoryDAO{
         PreparedStatement preparedStatement = DatabaseConnection.getInstance().prepareStatement(query);
         try {
             preparedStatement.setLong(1, id);
-            return DatabaseConnection.getInstance().sendQuery(preparedStatement).getObject(1,CategoryDTO.class)
+            return DatabaseConnection.getInstance().sendQuery(preparedStatement).getObject(1,CategoryDTO.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
