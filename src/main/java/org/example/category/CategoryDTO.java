@@ -1,6 +1,5 @@
-package org.example;
+package org.example.category;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

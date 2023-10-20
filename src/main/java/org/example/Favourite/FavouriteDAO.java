@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Favourite;
 
 public interface FavouriteDAO {
     FavouriteDTO getFavouriteById(Long id);

@@ -1,4 +1,6 @@
-package org.example;
+package org.example.User;
+
+import org.example.DatabaseConnection;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
