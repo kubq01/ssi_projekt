@@ -3,52 +3,57 @@ package org.example;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class CategoryDAOimpl implements CategoryDAO{
+public class ProductDAOimpl implements ProductDAO {
 
     @Override
-    public CategoryDTO getCategoryById(Long id) {
-        String query ="SELECT * FROM CATEGORY WHERE id = (?)";
+    public ProductDTO getProductById(Long id) {
+        String query = "SELECT * FROM product WHERE id = ?";
         PreparedStatement preparedStatement = DatabaseConnection.getInstance().prepareStatement(query);
+
         try {
             preparedStatement.setLong(1, id);
-            return DatabaseConnection.getInstance().sendQuery(preparedStatement).getObject(1,CategoryDTO.class);
+            return DatabaseConnection.getInstance().sendQuery(preparedStatement).getObject(1, ProductDTO.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void createCategory(CategoryDTO category) {
-        String statement = "INSERT INTO category (id, name) VALUES (?, ?)";
+    public void createProduct(ProductDTO product) {
+        String statement = "INSERT INTO product (categoryId, name, price, rating) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement = DatabaseConnection.getInstance().prepareStatement(statement);
+
         try {
-            preparedStatement.setLong(1, category.getId());
-            preparedStatement.setString(2, category.getName());
+            preparedStatement.setLong(1, product.getCategoryId());
+            preparedStatement.setString(2, product.getName());
+            preparedStatement.setDouble(3, product.getPrice());
+            preparedStatement.setDouble(4, product.getRating());
             DatabaseConnection.getInstance().sendUpdate(preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     @Override
-    public void updateCategory(CategoryDTO category) {
-        String statement = "UPDATE category SET  name = ? WHERE id = ?";
+    public void updateProduct(ProductDTO product) {
+        String statement = "UPDATE product SET categoryId = ?, name = ?, price = ?, rating = ? WHERE id = ?";
         PreparedStatement preparedStatement = DatabaseConnection.getInstance().prepareStatement(statement);
+
         try {
-            preparedStatement.setString(1, category.getName());
-            preparedStatement.setLong(2, category.getId());
+            preparedStatement.setLong(1, product.getCategoryId());
+            preparedStatement.setString(2, product.getName());
+            preparedStatement.setDouble(3, product.getPrice());
+            preparedStatement.setDouble(4, product.getRating());
+            preparedStatement.setLong(5, product.getId());
             DatabaseConnection.getInstance().sendUpdate(preparedStatement);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+
     @Override
-    public void deleteCategory(Long id) {
-        String statement = "DELETE FROM category WHERE id = ?";
+    public void deleteProduct(Long id) {
+        String statement = "DELETE FROM product WHERE id = ?";
         PreparedStatement preparedStatement = DatabaseConnection.getInstance().prepareStatement(statement);
 
         try {
